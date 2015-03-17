@@ -34,11 +34,11 @@ Parameters:
 
 -c CODING_REF, --coding_ref=CODING_REF
 
-(Required.) The path of coding reference gtf file. Two mandatory attributes (gene_id "value"; transcript_id "value") should be provided in the file. Some files which has been prepared could be download at http://wwww.bioinfo.org/software/cnci.
+(Required.) The path of coding reference gtf file. Two mandatory attributes (gene_id "value"; transcript_id "value") should be provided in the file. Some files which has been prepared could be download at http://www.bioinfo.org/np/
 
 -n NONCODING_REF, --noncoding_ref=NONCODING_REF.
 
-(Required.) The path of lincRNA reference gtf file. Two mandatory attributes (gene_id "value"; transcript_id "value") should be provided in the file. Some files which has been prepared could be download at http://wwww.bioinfo.org/software/cnci
+(Required.) The path of lincRNA reference gtf file. Two mandatory attributes (gene_id "value"; transcript_id "value") should be provided in the file. Some files which has been prepared could be download at http://www.bioinfo.org/np/
 
 -i INPUT_GTF, --input_gtf=INPUT_GTF
 
