@@ -106,7 +106,7 @@ you can use CNCI subroutines like our example:
 ```
 python CNCI_package/CNCI.py -f unannotation.gtf -g -o test -m ve -p 8 -d hg19.2bit
 
-python filter_novel_lincRNA.py -i test.index -g unannotation.gtf -s o -l 200 -e -o 
+python filter_novel_lincRNA.py -i test.index -g unannotation.gtf -s 0 -l 200 -e exon_num -o out_dir 
 
 python extract.py -i novel-noncoding.gtf,nov.gtf -n known-non-coding.gtf -c known-coding.gtf
 ```
