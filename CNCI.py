@@ -26,19 +26,21 @@ parse.add_option('-g','--gtf',dest='gtf',action='store_true',metavar='gtf file n
 parse.add_option('-d','--directory',dest='directory',action='store',metavar='',help='if your input file is gtf type please enter RefGenome directory')
 (options,args) = parse.parse_args()
 inPutFileName = options.file
-outPutFileName = options.outfile 
+outPutFileName = options.outfile
 Parallel = options.parallel
 ClassModel = options.model
 FileType = options.gtf
 Directory = options.directory
+
+CNCIPATH = os.path.split(os.path.realpath(__file__))[0]
 ################################################################
 if ClassModel == 've':
-    MatrixPath = "./CNCI_package/CNCI_Parameters/CNCI_matrix"
+    MatrixPath = CNCIPATH + "/CNCI_Parameters/CNCI_matrix"
     inMatrix = open(MatrixPath)
     Matrix = inMatrix.read()
     inMatrix.close()
 if ClassModel == 'pl':
-    MatrixPath = "./CNCI_package/CNCI_Parameters/plant.matrix"
+    MatrixPath = CNCIPATH + "/CNCI_Parameters/CNCI_matrix"
     inMatrix = open(MatrixPath)
     Matrix = inMatrix.read()
     inMatrix.close()
@@ -93,7 +95,7 @@ def InitCodonSeq(num,length,step,Arr):
 ##############################################################
 def split(files,number,out):
     file_num = len(files) / 2
-    split_step = int(int(file_num) / int(number))  
+    split_step = int(int(file_num) / int(number))
     split_step = split_step * 2
     title = ''+out+'/CNCI_file'
     start = 0
@@ -108,15 +110,15 @@ def split(files,number,out):
                 TEMP_FILE.write(Tmp)
             TEMP_FILE.close()
             start += split_step
-            end += split_step 
+            end += split_step
         else:
             temp_title = title + str(number)
             TEMP_FILE = open(temp_title,'w')
             for j in range(start,len(files)):
                 Tmp = files[j]
                 Tmp = str(Tmp) + '\n'
-                TEMP_FILE.write(Tmp)     
-###################################################################################################3 
+                TEMP_FILE.write(Tmp)
+###################################################################################################3
 def Add_Svm_Label(rec,FileName):
     SVM_arr_store = []
     SVM_FILE_ONE = open(FileName,'w')
@@ -136,7 +138,7 @@ def Add_Svm_Label(rec,FileName):
 ###################################################################
 def PutResult(detil_array):
     File = open(SvmFile)
-    file_arr_temp = File.read() 
+    file_arr_temp = File.read()
     File.close()
     classify_index = 0
     file_Arr = file_arr_temp.split('\n')
@@ -152,7 +154,7 @@ def PutResult(detil_array):
         length = temp_label_arr[1]
         score = temp_label_arr[2]
         if file_Arr[classify_index] == index_coding:
-            Label = str(Label) + ' ' + 'coding' 
+            Label = str(Label) + ' ' + 'coding'
         else:
             Label = str(Label) + ' ' + 'noncoding'
         classify_index = classify_index + 1
@@ -174,7 +176,7 @@ def PringResult(result,svmfinal):
 	Tabel_label = Arr_label[1]
         property = out_label_arr[1]
         start_position = out_label_arr[2]
-        stop_position = out_label_arr[3] 
+        stop_position = out_label_arr[3]
         value = out_label_arr[4]
 	out_value = value[0:5]
 	out_value = string.atof(out_value)
@@ -185,18 +187,18 @@ def PringResult(result,svmfinal):
         #    while True:
         #        out_value = random.randint(0.1,1)
         #        if Out_Hash[out_value] != 1:
-        #            break 
+        #            break
         #    Out_Hash[out_value] = 1
         #    out_value = out_value * -1
         if property == 'noncoding':
-            out_value = string.atof(0.64) * out_value    
-            out_value = 0.64 * out_value  
+            out_value = string.atof(0.64) * out_value
+            out_value = 0.64 * out_value
             if out_value > 0:
                 if out_value > 1:
                     out_value = -1 / out_value
                     temp_out_str = str(Tabel_label)+'\t'+str(property)+'\t'+str(out_value)+'\t'+str(start_position)+'\t'+str(stop_position)+'\t'+str(T_length)
                     temp_out_str = temp_out_str + '\n'
-                    OutFileResult.write(temp_out_str)   
+                    OutFileResult.write(temp_out_str)
                 else:
                     out_value = -1 * out_value
 		    temp_out_str = str(Tabel_label)+'\t'+str(property)+'\t'+str(out_value)+'\t'+str(start_position)+'\t'+str(stop_position)+'\t'+str(T_length)
@@ -218,7 +220,7 @@ def PringResult(result,svmfinal):
 		    temp_out_str = str(Tabel_label)+'\t'+str(property)+'\t'+str(out_value)+'\t'+str(start_position)+'\t'+str(stop_position)+'\t'+str(T_length)
                     temp_out_str = temp_out_str + '\n'
                     OutFileResult.write(temp_out_str)
-            else: 
+            else:
 	        temp_out_str = str(Tabel_label)+'\t'+str(property)+'\t'+str(out_value)+'\t'+str(start_position)+'\t'+str(stop_position)+'\t'+str(T_length)
                 temp_out_str = temp_out_str + '\n'
                 OutFileResult.write(temp_out_str)
@@ -322,7 +324,7 @@ def mainProcess(input,codonArr,hash_matrix,output,number):
             label_Arr_tmp.append(label)
         else :
             seq = sequence_Arr[n]
-            FastA_seq_Arr_tmp.append(seq)  
+            FastA_seq_Arr_tmp.append(seq)
 ###########################################################
     PROPERTY_ARR = []
     DETIL_ARR = []
@@ -347,7 +349,7 @@ def mainProcess(input,codonArr,hash_matrix,output,number):
             TempStr = ''
             if o < 3 :
                 TempStr = InitCodonSeq(o,Seq_len-1,3,sequence_process_Arr)
-            if 2 < o < 6 : 
+            if 2 < o < 6 :
                 TempStr = InitCodonSeq(o-3,Seq_len-1,3,r_sequence_process_Arr)
             TempArray = TempStr.split(' ') # construct codon array
             TempArray.pop()
@@ -399,7 +401,7 @@ def mainProcess(input,codonArr,hash_matrix,output,number):
                     temple = re.compile('[atcg]{6}')
                     if temple.match(temp1):
                         Onum = string.atof(Onum) + string.atof(hash_matrix[temp1])
-                score_array.append(Onum) 
+                score_array.append(Onum)
                 length_store_array.append(max_length)
             else:
                 num = 0
@@ -407,7 +409,7 @@ def mainProcess(input,codonArr,hash_matrix,output,number):
                     temp1 = TempArray[n]+TempArray[n+1]
                     temple2 = re.compile('[atcg{6}]')
                     if temple2.match(temp1):
-                        num = string.atof(num) + string.atof(hash_matrix[temp1])          
+                        num = string.atof(num) + string.atof(hash_matrix[temp1])
                 OutStr = ' '.join(TempArray)
                 Pos.append('Full Length')
                 max_Value.append(num)
@@ -425,13 +427,13 @@ def mainProcess(input,codonArr,hash_matrix,output,number):
         detil_index = orf_index # The selected reading frame
         o_arr = max_String[orf_index].split(' ') ## MLCDS sequence
         o_arr.pop()
-        SequenceLen = len(o_arr) - 1 
+        SequenceLen = len(o_arr) - 1
         M_score = 0
         for j in range(SequenceLen):
-            temp_trip = o_arr[j]+o_arr[j+1] 
+            temp_trip = o_arr[j]+o_arr[j+1]
             temple3 = re.compile('[atcg]{6}')
             if temple3.match(temp_trip):
-                M_score = string.atof(M_score) + string.atof(hash_matrix[temp_trip])  
+                M_score = string.atof(M_score) + string.atof(hash_matrix[temp_trip])
         SequenceLen = SequenceLen + 2
         M_score = M_score / SequenceLen  ### M_score
         MLCDS_str = ''.join(o_arr)
@@ -441,15 +443,15 @@ def mainProcess(input,codonArr,hash_matrix,output,number):
         MLCDS_seq_length = len(MLCDS_sequence) - 1
         other_CDS_array = []
         for o in range(1,6):
-            MLCDS_TempStr = '' 
-            if o < 3: 
+            MLCDS_TempStr = ''
+            if o < 3:
                  MLCDS_TempStr = InitCodonSeq(o,MLCDS_seq_length-1,3,MLCDS_sequence)
             if 2 < o < 6 :
                  MLCDS_TempStr = InitCodonSeq(o,MLCDS_seq_length-1,3,rMLCDS_sequence)
             MLCDS_array = MLCDS_TempStr.split(' ') ## codon array
             MLCDS_array.pop()
             other_num = 0
-            MLCDS_array_Len = len(MLCDS_array) - 1 
+            MLCDS_array_Len = len(MLCDS_array) - 1
             for j in range(MLCDS_array_Len):
                 temp2 = MLCDS_array[j]+MLCDS_array[j+1]
                 temple4 = re.compile('[atcg]{6}')
@@ -458,11 +460,11 @@ def mainProcess(input,codonArr,hash_matrix,output,number):
             MLCDS_array_Len = MLCDS_array_Len + 2
             other_num = other_num / MLCDS_array_Len
             other_CDS_array.append(other_num)
-    
+
         score_distance = 0
         for m in range(len(other_CDS_array)):
             score_distance += M_score - other_CDS_array[m]
-        score_distance = score_distance / 5 ####### score_distance 
+        score_distance = score_distance / 5 ####### score_distance
 ########################################################################################
         out_pos = Pos[orf_index]
         M_length = length_store_array[orf_index]
@@ -476,7 +478,7 @@ def mainProcess(input,codonArr,hash_matrix,output,number):
             temp = length_store_array[p]
             if temp != M_length:
                 detil_other_length_array.append(temp)
-        r_detil_other_length_array = detil_other_length_array[:] 
+        r_detil_other_length_array = detil_other_length_array[:]
         r_detil_other_length_array.sort(reverse=True)
 ############################################################################################3
         dicodon_hash = {}
@@ -500,9 +502,9 @@ def mainProcess(input,codonArr,hash_matrix,output,number):
         if C_num1 == 0:
             C_num1 = 1
         for i in range(len(Coding_Array_one)):
-            Coding_Array_one[i] = str(Coding_Array_one[i] / C_num1) 
+            Coding_Array_one[i] = str(Coding_Array_one[i] / C_num1)
         Array_Str = ' '.join(Coding_Array_one)
-        GC_string = ' '.join(o_arr) 
+        GC_string = ' '.join(o_arr)
         GC_array = GC_string.split(' ')
         GC_number = 0
         for c in range(len(GC_array)):
@@ -518,11 +520,11 @@ def mainProcess(input,codonArr,hash_matrix,output,number):
         PROPERTY_ARR.append(PROPERTY_STR)
         DETIL_ARR.append(DETIL_STR)
     return(PROPERTY_ARR,DETIL_ARR)
-####################################################################################################################### 
+#######################################################################################################################
 if FileType:
     inGtfFiles = inPutFileName + '.bed'
     fastaFiles = inPutFileName + '.fa'
-    os.system('perl ./CNCI_package/gtf2Bed.pl '+inPutFileName+' > '+inGtfFiles+'')
+    os.system('perl ' + CNCIPATH + '/gtf2Bed.pl '+inPutFileName+' > '+inGtfFiles+'')
     time.sleep(10)
     os.system('twoBitToFa -bed='+inGtfFiles+' '+Directory+' '+fastaFiles+' ')
     GtfInFiles = open(fastaFiles)
@@ -542,7 +544,7 @@ sequence_Arr = inFilesArr.split('\n')
 sLen = len(sequence_Arr) - 1
 del sequence_Arr[sLen]
 ARRAY =  TwoLineFasta(sequence_Arr)
-temp_log = outPutFileName  
+temp_log = outPutFileName
 Label_Array,FastA_Seq_Array = Tran_checkSeq(ARRAY,temp_log)
 inFileLength = len(Label_Array)
 TOT_STRING = []
@@ -554,7 +556,7 @@ for i in range(len(Label_Array)):
     TOT_STRING.append(tmp_label)
     TOT_STRING.append(Temp_Seq)
 ############################################################
-if Parallel == 1: 
+if Parallel == 1:
     (Result_Pro,Result_Detil) = mainProcess(inFilesArr,Alphabet,Matrix_hash,outPutFileName,1,)
     Temp_Dir = outPutFileName + '_Temp_Dir'
     subprocess.call('mkdir '+Temp_Dir+'' , shell=True)
@@ -565,17 +567,17 @@ if Parallel == 1:
     SVM_STORE = Add_Svm_Label(Result_Pro,SvmoutPutFile)
 ################################################################################################
     if ClassModel == 've':
-        os.system('./CNCI_package/libsvm-3.0/svm-scale -r ./CNCI_package/CNCI_Parameters/python_scale '+SvmoutPutFile+' > '+SvmPutFileName+'')
-        os.system('./CNCI_package/libsvm-3.0/svm-predict '+SvmPutFileName+' ./CNCI_package/CNCI_Parameters/python_model '+SvmFile+' > '+svm_tmp+'')
+        os.system(CNCIPATH + '/libsvm-3.0/svm-scale -r '+ CNCIPATH + '/CNCI_Parameters/python_scale '+SvmoutPutFile+' > '+SvmPutFileName+'')
+        os.system(CNCIPATH + '/libsvm-3.0/svm-predict '+SvmPutFileName+' ' + CNCIPATH + '/CNCI_Parameters/python_model '+SvmFile+' > '+svm_tmp+'')
     if ClassModel == 'pl':
-        os.system('./CNCI_package/libsvm-3.0/svm-scale -r ./CNCI_package/CNCI_Parameters/plant_scale '+SvmoutPutFile+' > '+SvmPutFileName+'')
-        os.system('./CNCI_package/libsvm-3.0/svm-predict '+SvmPutFileName+' ./CNCI_package/CNCI_Parameters/plant_model '+SvmFile+' > '+svm_tmp+'')
+        os.system(CNCIPATH + '/libsvm-3.0/svm-scale -r ' + CNCIPATH + '/CNCI_Parameters/plant_scale '+SvmoutPutFile+' > '+SvmPutFileName+'')
+        os.system(CNCIPATH + '/libsvm-3.0/svm-predict '+SvmPutFileName+' ' + CNCIPATH + '/CNCI_Parameters/plant_model '+SvmFile+' > '+svm_tmp+'')
 ##########################################################################################################
     FirResult = PutResult(Result_Detil)
     Out_Dir = outPutFileName
     subprocess.call('mkdir '+Out_Dir+'' , shell=True)
     SvmFinalResutl = ''+Out_Dir+'/CNCI.index'
-    PringResult(FirResult,SvmFinalResutl) 
+    PringResult(FirResult,SvmFinalResutl)
     #subprocess.call('rm '+SvmPutFileName+' ', shell=True)
     #subprocess.call('rm '+SvmFile+' ', shell=True)
     #subprocess.call('rm '+svm_tmp+' ', shell=True)
@@ -586,21 +588,21 @@ if Parallel == 1:
 if Parallel > 1:
     Proc_Thread = []
     Temp_Dir = outPutFileName + '_Tmp_Dir'
-    Out_Dir = outPutFileName 
+    Out_Dir = outPutFileName
     subprocess.call('mkdir '+Temp_Dir+'' , shell=True)
     subprocess.call('mkdir '+Out_Dir+'' , shell=True)
-    split(TOT_STRING,Parallel,Temp_Dir) 
+    split(TOT_STRING,Parallel,Temp_Dir)
     Con_ARRAY = count(Temp_Dir,Parallel)
     for i in range(1,int(Parallel)+1):
         temp_inPutFileName = ''+Temp_Dir+'/CNCI_file' + str(i)
         temp_inFiles = open(temp_inPutFileName)
-        temp_inFilesArr = temp_inFiles.read()       
+        temp_inFilesArr = temp_inFiles.read()
         Proc_Thread.append(Process(target=mainProcess, args=(temp_inFilesArr,Alphabet,Matrix_hash,Temp_Dir,str(i))))
     for p in Proc_Thread:
         p.start()
     for i in Proc_Thread:
         p.join()
-        
+
     for i in range(1,int(Parallel)+1):
         n = int(i) - 1
         Score_string = ''+Temp_Dir+'/CNCI_file_score' + str(i)
@@ -609,11 +611,11 @@ if Parallel > 1:
         SUB_DETIL_LEN = 0
 #########################################################################
         SUB_SCORE_LEN,SUB_DETIL_LEN  = check(Score_string,Detil_string)
-        while int(SUB_SCORE_LEN) < Con_ARRAY[n] or int(SUB_DETIL_LEN) < Con_ARRAY[n]: 
+        while int(SUB_SCORE_LEN) < Con_ARRAY[n] or int(SUB_DETIL_LEN) < Con_ARRAY[n]:
             SUB_SCORE_LEN,SUB_DETIL_LEN = check(Score_string,Detil_string)
 #######################################################################
         subprocess.call('cat '+Score_string+' >> '+Temp_Dir+'/CNCI_score', shell=True)
-        subprocess.call('cat '+Detil_string+' >> '+Temp_Dir+'/CNCI_detil', shell=True) 
+        subprocess.call('cat '+Detil_string+' >> '+Temp_Dir+'/CNCI_detil', shell=True)
     Score_File_Path = ''+Temp_Dir+'/CNCI_score'
     Detil_File_Path = ''+Temp_Dir+'/CNCI_detil'
     SCORE_FILE = open(Score_File_Path)
@@ -634,11 +636,11 @@ if Parallel > 1:
     SVM_STORE = Add_Svm_Label(score_array,SvmoutPutFile)
     #################################################################################################
     if ClassModel == 've':
-        os.system('./CNCI_package/libsvm-3.0/svm-scale -r ./CNCI_package/CNCI_Parameters/python_scale '+SvmoutPutFile+' > '+SvmPutFileName+'')
-        os.system('./CNCI_package/libsvm-3.0/svm-predict '+SvmPutFileName+' ./CNCI_package/CNCI_Parameters/python_model '+SvmFile+' > '+svm_tmp+'')
+        os.system(CNCIPATH + '/libsvm-3.0/svm-scale -r ' + CNCIPATH + '/CNCI_Parameters/python_scale '+SvmoutPutFile+' > '+SvmPutFileName+'')
+        os.system(CNCIPATH + '/libsvm-3.0/svm-predict '+SvmPutFileName+' ' + CNCIPATH + '/CNCI_Parameters/python_model '+SvmFile+' > '+svm_tmp+'')
     if ClassModel == 'pl':
-        os.system('./CNCI_package/libsvm-3.0/svm-scale -r ./CNCI_package/CNCI_Parameters/plant_scale '+SvmoutPutFile+' > '+SvmPutFileName+'')
-        os.system('./CNCI_package/libsvm-3.0/svm-predict '+SvmPutFileName+' ./CNCI_package/CNCI_Parameters/plant_model '+SvmFile+' > '+svm_tmp+'')
+        os.system(CNCIPATH + '/libsvm-3.0/svm-scale -r ' + CNCIPATH + '/CNCI_Parameters/plant_scale '+SvmoutPutFile+' > '+SvmPutFileName+'')
+        os.system(CNCIPATH + '/libsvm-3.0/svm-predict '+SvmPutFileName+' ' + CNCIPATH + '/CNCI_Parameters/plant_model '+SvmFile+' > '+svm_tmp+'')
     ##########################################################################################################
     FirResult = PutResult(detil_array)
     SvmFinalResutl = Out_Dir + '/CNCI.index'
