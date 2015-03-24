@@ -33,7 +33,6 @@ FileType = options.gtf
 Directory = options.directory
 
 CNCIPATH = os.path.split(os.path.realpath(__file__))[0]
-print CNCIPATH
 ################################################################
 if ClassModel == 've':
     MatrixPath = CNCIPATH + "/CNCI_Parameters/CNCI_matrix"
