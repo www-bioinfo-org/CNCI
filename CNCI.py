@@ -33,6 +33,7 @@ FileType = options.gtf
 Directory = options.directory
 
 CNCIPATH = os.path.split(os.path.realpath(__file__))[0]
+print CNCIPATH
 ################################################################
 if ClassModel == 've':
     MatrixPath = CNCIPATH + "/CNCI_Parameters/CNCI_matrix"
@@ -147,19 +148,21 @@ def PutResult(detil_array):
     Temp_Result_Arr = []
     for i in range(len(detil_array)):
         temp_label_str = detil_array[i]
-        temp_label_arr = temp_label_str.split(' ')
+        temp_label_arr_label = temp_label_str.split(";;;;;")
+        Label = temp_label_arr_label[0]
+        temp_label_arr = temp_label_arr_label[1].split(" ")
         sub_temp_label_arr = temp_label_arr[1:]
         sub_temp_label_str = ' '.join(sub_temp_label_arr)
-        Label = temp_label_arr[0]
         length = temp_label_arr[1]
         score = temp_label_arr[2]
         if file_Arr[classify_index] == index_coding:
-            Label = str(Label) + ' ' + 'coding'
+            Label = str(Label) + ';;;;; ' + 'coding'
         else:
-            Label = str(Label) + ' ' + 'noncoding'
+            Label = str(Label) + ';;;;; ' + 'noncoding'
         classify_index = classify_index + 1
         Temp_Result_str = str(Label) + ' ' + sub_temp_label_str
         Temp_Result_Arr.append(Temp_Result_str)
+
     return Temp_Result_Arr
 #####################################################################
 def PringResult(result,svmfinal):
@@ -170,10 +173,10 @@ def PringResult(result,svmfinal):
     Out_Hash = {}
     for i in range(len(result)):
         out_label = result[i]
-        out_label_arr = out_label.split(' ')
-        T_label = out_label_arr[0]
-	Arr_label = T_label.split('>')
-	Tabel_label = Arr_label[1]
+        out_label_arr_label = out_label.split(';;;;;')
+        out_label_arr = out_label_arr_label[1].split(' ')
+        T_label = out_label_arr_label[0]
+        Tabel_label = T_label[1:]
         property = out_label_arr[1]
         start_position = out_label_arr[2]
         stop_position = out_label_arr[3]
@@ -514,7 +517,7 @@ def mainProcess(input,codonArr,hash_matrix,output,number):
         GC_precent = GC_number / len(GC_array)# GC precent
 ###############################################################################################
         PROPERTY_STR = str(M)+' '+str(M_length)+' '+str(M_score)+' '+str(length_precent)+' '+str(score_distance)+' '+str(Array_Str) + '\n'
-        DETIL_STR = str(Label)+' '+str(out_pos)+' '+str(M_score) + ' ' + str(Detil_len) + '\n'
+        DETIL_STR = str(Label)+';;;;; '+str(out_pos)+' '+str(M_score) + ' ' + str(Detil_len) + '\n'
         SCORE.write(PROPERTY_STR)
         DETIL.write(DETIL_STR)
         PROPERTY_ARR.append(PROPERTY_STR)
