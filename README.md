@@ -48,7 +48,7 @@ Parameters:
 
 (Required.) Output dirctory of the results. 
 
-**CNCI: A classification tool for identify coding or non-coding transcripts (fasta files and gtf files)**
+**CNCI.py: A classification tool for identify coding or non-coding transcripts (fasta files and gtf files)**
 
 Parameters: 
 
