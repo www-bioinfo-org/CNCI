@@ -141,6 +141,7 @@ class Gtf(object):
                             self.transcript[temp_tid]['CDS_flag'] = True
                             self.transcript[temp_tid]['CDS'] = [temp_start,temp_end]
                         else:
+                            line = f.readline()
                             continue
                         if(self.transcript[temp_tid]['score_flag']):
                             self.transcript[temp_tid]['score'] = (
